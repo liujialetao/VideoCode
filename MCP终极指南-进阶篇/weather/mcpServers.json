@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "weather": {
+      "disabled": true,
+      "timeout": 60,
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "/Users/liujia/code/learn/rag/VideoCode/MCP终极指南-进阶篇/weather/mcp_logger.py",
+        "uv",
+        "--directory",
+        "/Users/liujia/code/learn/rag/VideoCode/MCP终极指南-进阶篇/weather",
+        "run",
+        "weather.py"
+      ]
+    }
+  }
+}
