@@ -150,15 +150,6 @@ try:
         daemon=True
     )
 
-    # Optional: Handle stderr similarly (log and pass through)
-    stderr_thread = threading.Thread(
-        target=forward_and_log_stdout, # Can reuse the function
-        args=(process.stderr, sys.stderr.buffer, log_f), # Pass stderr streams
-        # Add a different prefix in the function if needed, or modify function
-        # For now, it will log with "STDOUT:" prefix - might want to change function
-        # Let's modify the function slightly for this
-        daemon=True
-    )
     # A slightly modified version for stderr logging
     def forward_and_log_stderr(target_stderr, proxy_stderr, log_file):
         """Reads from target's stderr, logs it, writes to proxy's stderr."""
