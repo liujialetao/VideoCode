@@ -1,12 +1,35 @@
+# 项目元数据配置
 [project]
 name = "rag"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
+
+# 项目依赖包列表
 dependencies = [
-    "chromadb>=1.0.15",
-    "google-genai>=1.24.0",
-    "python-dotenv>=1.1.1",
-    "sentence-transformers>=5.0.0",
+    "chromadb>=1.0.15",            # 向量数据库，用于存储和检索文档嵌入
+    "google-genai>=1.24.0",        # Google Generative AI 客户端
+    "python-dotenv>=1.1.1",        # 环境变量管理，用于加载 .env 文件
+    "sentence-transformers>=5.0.0", # 文本嵌入模型，将文本转换为向量
 ]
+
+# 启动 Jupyter Lab 的命令：
+# uv run --with jupyter jupyter lab
+#
+# 命令详细执行步骤：
+# 1. uv 检查：当前目录是否有 pyproject.toml 或 requirements.txt？ → 有（本文件）
+# 2. uv 检查：全局缓存是否有已安装 jupyter 的环境？ → 没有
+# 3. uv 在缓存目录自动创建临时环境，并通过 pip 安装 jupyter
+# 4. 在这个临时环境中启动 jupyter lab 命令
+#
+# 说明：
+# --with jupyter 参数表示在当前项目环境中临时安装 jupyter，无需将 jupyter 添加到项目依赖中
+# 这样可以保持依赖清单干净，避免将开发工具部署到生产环境
+
+# PyPI 镜像源配置
+[[tool.uv.index]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+ 
