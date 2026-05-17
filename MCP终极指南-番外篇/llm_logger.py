@@ -25,7 +25,7 @@ class AppLogger:
 
 
 app = FastAPI(title="LLM API Logger")
-logger = AppLogger("llm.log")
+logger = AppLogger("llm1.log")
 
 
 @app.post("/v1/chat/completions")
