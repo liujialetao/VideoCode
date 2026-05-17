@@ -140,7 +140,7 @@ class StreamResponseCollector:
 
 
 app = FastAPI(title="LLM API Logger")
-logger = AppLogger("llm2.log")
+logger = AppLogger("llm2_2.log")
 
 
 @app.post("/v1/chat/completions")
