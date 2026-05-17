@@ -1,3 +1,5 @@
+import json
+
 import httpx
 from fastapi import FastAPI, Request
 from starlette.responses import StreamingResponse
@@ -29,15 +31,15 @@ logger = AppLogger("llm.log")
 @app.post("/v1/chat/completions")
 @app.post("/chat/completions")
 async def proxy_request(request: Request):
-    print("enter MCP终极指南-番外篇/llm_logger.py:30")
     body_bytes = await request.body()
-    body_str = body_bytes.decode('utf-8')
-    logger.log(f"模型请求：{body_str}")
-    body = await request.json()
+    body = json.loads(body_bytes.decode('utf-8'))
+    logger.log("模型请求：\n" + json.dumps(body, ensure_ascii=False, indent=2))
 
     logger.log("模型返回：\n")
 
     async def event_stream():
+        full_text = ""
+        reasoning = ""
         async with httpx.AsyncClient(timeout=None) as client:
             async with client.stream(
                     "POST",
@@ -50,8 +52,30 @@ async def proxy_request(request: Request):
                     },
             ) as response:
                 async for line in response.aiter_lines():
-                    logger.log(line)
+                    if line.startswith("data: "):
+                        data_str = line[6:].strip()
+                        if data_str and data_str != "[DONE]":
+                            try:
+                                chunk = json.loads(data_str)
+                                choices = chunk.get("choices", [])
+                                if choices:
+                                    delta = choices[0].get("delta", {})
+                                    content = delta.get("content")
+                                    rc = delta.get("reasoning_content")
+                                    if content:
+                                        full_text += content
+                                    if rc:
+                                        reasoning += rc
+                                usage = chunk.get("usage")
+                                if usage:
+                                    logger.log(f"\n\n[Token统计] {json.dumps(usage, ensure_ascii=False)}")
+                            except (json.JSONDecodeError, KeyError, IndexError):
+                                pass
                     yield f"{line}\n"
+        if full_text:
+            logger.log(f"\n\n[完整回复]\n{full_text}")
+        if reasoning:
+            logger.log(f"\n[推理过程]\n{reasoning}")
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
