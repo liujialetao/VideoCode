@@ -26,9 +26,10 @@ app = FastAPI(title="LLM API Logger")
 logger = AppLogger("llm.log")
 
 
+@app.post("/v1/chat/completions")
 @app.post("/chat/completions")
 async def proxy_request(request: Request):
-
+    print("enter MCP终极指南-番外篇/llm_logger.py:30")
     body_bytes = await request.body()
     body_str = body_bytes.decode('utf-8')
     logger.log(f"模型请求：{body_str}")
@@ -40,7 +41,7 @@ async def proxy_request(request: Request):
         async with httpx.AsyncClient(timeout=None) as client:
             async with client.stream(
                     "POST",
-                    "https://openrouter.ai/api/v1/chat/completions",
+                    "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
                     json=body,
                     headers={
                         "Content-Type": "application/json",
