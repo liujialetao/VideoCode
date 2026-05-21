@@ -7,7 +7,7 @@ import argparse
 import os
 
 # --- Configuration ---
-LOG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "mcp_io.log")
+LOG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "mcp_io_20260521_1.log")
 # --- End Configuration ---
 
 # --- Argument Parsing ---
